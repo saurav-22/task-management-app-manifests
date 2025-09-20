@@ -1,0 +1,53 @@
+# Deployments for all microservices
+{{- range $service := list "user-service" "board-service" "task-service" "comment-service" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $service }}
+  namespace: task-app
+  labels:
+    app: {{ $service }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $service }}
+  template:
+    metadata:
+      labels:
+        app: {{ $service }}
+    spec:
+      containers:
+      - name: {{ $service }}
+        image: {{ $.Values.image.repository }}/{{ $service }}:{{ $.Values.image.tag }}
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbHost
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbUser
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbPassword
+        - name: DB_NAME
+          value: {{ $.Values.rds.dbName }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          {{- toYaml $.Values.resources | nindent 12 }}
+{{- end }}
