@@ -1,0 +1,5 @@
+# Namespace for Task App
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: task-app

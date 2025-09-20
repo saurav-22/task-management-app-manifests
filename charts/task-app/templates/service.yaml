@@ -1,0 +1,19 @@
+# Services for all microservices
+{{- range $service := list "user-service" "board-service" "task-service" "comment-service" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $service }}
+  namespace: task-app
+  labels:
+    app: {{ $service }}
+spec:
+  selector:
+    app: {{ $service }}
+  ports:
+  - port: {{ $.Values.service.port }}
+    targetPort: {{ $.Values.service.targetPort }}
+    protocol: TCP
+  type: ClusterIP
+{{- end }}

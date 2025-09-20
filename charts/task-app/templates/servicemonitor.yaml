@@ -1,0 +1,19 @@
+# ServiceMonitor for Prometheus metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-app-monitor
+  namespace: task-app
+  labels:
+    app: task-app
+spec:
+  selector:
+    matchLabels:
+      app: task-app
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+  namespaceSelector:
+    matchNames:
+    - task-app

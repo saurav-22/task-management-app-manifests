@@ -1,0 +1,45 @@
+# Ingress for ALB routing
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: task-app-ingress
+  namespace: task-app
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /api/users
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: {{ .Values.service.port }}
+      - path: /api/boards
+        pathType: Prefix
+        backend:
+          service:
+            name: board-service
+            port:
+              number: {{ .Values.service.port }}
+      - path: /api/tasks
+        pathType: Prefix
+        backend:
+          service:
+            name: task-service
+            port:
+              number: {{ .Values.service.port }}
+      - path: /api/comments
+        pathType: Prefix
+        backend:
+          service:
+            name: comment-service
+            port:
+              number: {{ .Values.service.port }}
+{{- end }}
