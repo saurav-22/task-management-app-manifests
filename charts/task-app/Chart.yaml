@@ -1,0 +1,6 @@
+# Helm chart metadata for Task App
+apiVersion: v2
+name: task-app
+description: Helm chart for Task Management App
+version: 1.0.0
+appVersion: "1.0.0"
