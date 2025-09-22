@@ -12,7 +12,7 @@ spec:
   - host: k8s-taskapp-taskappi-929be65fa1-1617985190.ap-south-1.elb.amazonaws.com
     http:
       paths:
-      - path: /api/users
+      - path: /api/users/*
         pathType: Prefix
         backend:
           service:
@@ -40,4 +40,5 @@ spec:
             name: comment-service
             port:
               number: 80
+
 
