@@ -1,19 +1,10 @@
 # Helm values for Task App
-replicaCount: 2
-
 image:
-  repository: 051101197314.dkr.ecr.ap-south-1.amazonaws.com/task-app # Replace with your ECR base URI
   tag: latest
-  pullPolicy: Always
-
+replicaCount: 2
 service:
   port: 80
   targetPort: 3000
-
-ingress:
-  enabled: true
-  host: k8s-taskapp-taskappi-929be65fa1-941636230.ap-south-1.elb.amazonaws.com  # Replace with your ALB DNS after deployment
-
 resources:
   limits:
     cpu: "500m"
@@ -21,13 +12,10 @@ resources:
   requests:
     cpu: "200m"
     memory: "256Mi"
-
 autoscaling:
-  enabled: true
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
-
 rds:
   dbName: task_app
-  # dbHost, dbUser, dbPassword are stored in Kubernetes Secret (secrets.yaml)
+# dbHost, dbUser, dbPassword, are stored in Kubernetes Secret (secrets.yaml)
