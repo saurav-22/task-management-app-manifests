@@ -9,7 +9,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-  - host: <update-with-alb-dns>.ap-south-1.elb.amazonaws.com
+  - host: k8s-taskapp-taskappi-929be65fa1-1617985190.ap-south-1.elb.amazonaws.com
     http:
       paths:
       - path: /api/users
@@ -40,3 +40,4 @@ spec:
             name: comment-service
             port:
               number: 80
+
