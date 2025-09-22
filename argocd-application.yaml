@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/saurav-22/task-management-app-manifests.git
     path: charts/task-app
-    targetRevision: HEAD
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: task-app
