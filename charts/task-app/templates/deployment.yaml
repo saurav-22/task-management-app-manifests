@@ -1,27 +1,25 @@
-# Deployments for all microservices
-{{- range $service := list "user-service" "board-service" "task-service" "comment-service" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $service }}
+  name: user-service
   namespace: task-app
   labels:
-    app: {{ $service }}
+    app: user-service
 spec:
-  replicas: {{ $.Values.replicaCount }}
+  replicas: 2
   selector:
     matchLabels:
-      app: {{ $service }}
+      app: user-service
   template:
     metadata:
       labels:
-        app: {{ $service }}
+        app: user-service
     spec:
       containers:
-      - name: {{ $service }}
-        image: {{ $.Values.image.repository }}/{{ $service }}:{{ $.Values.image.tag }}
-        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+      - name: user-service
+        image: 051101197314.dkr.ecr.ap-south-1.amazonaws.com/task-app/user-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
@@ -41,16 +39,194 @@ spec:
               name: rds-credentials
               key: dbPassword
         - name: DB_NAME
-          value: {{ $.Values.rds.dbName }}
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbName
         livenessProbe:
           httpGet:
             path: /health
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10
-{{- if $.Values.resources }}
         resources:
-{{ toYaml $.Values.resources | nindent 10 }}
-{{- end }}
-{{- end }}
-{{- end }}
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: board-service
+  namespace: task-app
+  labels:
+    app: board-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: board-service
+  template:
+    metadata:
+      labels:
+        app: board-service
+    spec:
+      containers:
+      - name: board-service
+        image: 051101197314.dkr.ecr.ap-south-1.amazonaws.com/task-app/board-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbHost
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbUser
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbPassword
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbName
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-service
+  namespace: task-app
+  labels:
+    app: task-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-service
+  template:
+    metadata:
+      labels:
+        app: task-service
+    spec:
+      containers:
+      - name: task-service
+        image: 051101197314.dkr.ecr.ap-south-1.amazonaws.com/task-app/task-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbHost
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbUser
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbPassword
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbName
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment-service
+  namespace: task-app
+  labels:
+    app: comment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: comment-service
+  template:
+    metadata:
+      labels:
+        app: comment-service
+    spec:
+      containers:
+      - name: comment-service
+        image: 051101197314.dkr.ecr.ap-south-1.amazonaws.com/task-app/comment-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbHost
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbUser
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbPassword
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: rds-credentials
+              key: dbName
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
