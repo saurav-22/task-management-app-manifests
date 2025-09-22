@@ -1,19 +1,64 @@
-# Services for all microservices
-{{- range $service := list "user-service" "board-service" "task-service" "comment-service" }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $service }}
+  name: user-service
   namespace: task-app
   labels:
-    app: {{ $service }}
+    app: user-service
 spec:
   selector:
-    app: {{ $service }}
+    app: user-service
   ports:
-  - port: {{ $.Values.service.port }}
-    targetPort: {{ $.Values.service.targetPort }}
+  - port: 80
+    targetPort: 3000
     protocol: TCP
   type: ClusterIP
-{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: board-service
+  namespace: task-app
+  labels:
+    app: board-service
+spec:
+  selector:
+    app: board-service
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-service
+  namespace: task-app
+  labels:
+    app: task-service
+spec:
+  selector:
+    app: task-service
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comment-service
+  namespace: task-app
+  labels:
+    app: comment-service
+spec:
+  selector:
+    app: comment-service
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
